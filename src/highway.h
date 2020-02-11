@@ -36,7 +36,7 @@ public:
 		tools = Tools();
 	
 		egoCar = Car(Vect3(0, 0, 0), Vect3(4, 2, 2), Color(0, 1, 0), 0, 0, 2, "egoCar");
-		
+		// 车辆1
 		Car car1(Vect3(-10, 4, 0), Vect3(4, 2, 2), Color(0, 0, 1), 5, 0, 2, "car1");
 		
 		std::vector<accuation> car1_instructions;
@@ -56,7 +56,7 @@ public:
 			car1.setUKF(ukf1);
 		}
 		traffic.push_back(car1);
-		
+		// 车辆2
 		Car car2(Vect3(25, -4, 0), Vect3(4, 2, 2), Color(0, 0, 1), -6, 0, 2, "car2");
 		std::vector<accuation> car2_instructions;
 		a = accuation(4.0*1e6, 3.0, 0.0);
@@ -70,7 +70,7 @@ public:
 			car2.setUKF(ukf2);
 		}
 		traffic.push_back(car2);
-	
+		// 车辆3
 		Car car3(Vect3(-12, 0, 0), Vect3(4, 2, 2), Color(0, 0, 1), 1, 0, 2, "car3");
 		std::vector<accuation> car3_instructions;
 		a = accuation(0.5*1e6, 2.0, 1.0);
@@ -108,7 +108,7 @@ public:
 	void stepHighway(double egoVelocity, long long timestamp, int frame_per_sec, pcl::visualization::PCLVisualizer::Ptr& viewer)
 	{
 
-		if(visualize_pcd)
+		if(visualize_pcd)// 是否显示
 		{
 			pcl::PointCloud<pcl::PointXYZ>::Ptr trafficCloud = tools.loadPcd("../src/sensors/data/pcd/highway_"+std::to_string(timestamp)+".pcd");
 			renderPointCloud(viewer, trafficCloud, "trafficCloud", Color((float)184/256,(float)223/256,(float)252/256));
@@ -116,8 +116,8 @@ public:
 		
 
 		// render highway environment with poles
-		renderHighway(egoVelocity*timestamp/1e6, viewer);
-		egoCar.render(viewer);
+		renderHighway(egoVelocity*timestamp/1e6, viewer); // 绘制高速公路
+		egoCar.render(viewer);//绘制车辆
 		
 		for (int i = 0; i < traffic.size(); i++)
 		{

@@ -29,6 +29,11 @@ class UKF {
    */
   void Prediction(double delta_t);
 
+  void AugmentedSigmentPoints(MatrixXd* Xsig_out);
+  void SigmaPointPrediction(MatrixXd Xsig, double delta_t);
+  void PredictMeanAndCovariance(VectorXd* x_pred,MatrixXd* p_pred);
+  void PredictRadarMeasurement(Eigen::VectorXd* z_out,Eigen::MatrixXd* s_out,Eigen::MatrixXd* Zsig_out);
+
   /**
    * Updates the state and the state covariance matrix using a laser measurement
    * @param meas_package The measurement at k+1
@@ -40,6 +45,9 @@ class UKF {
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+
+  void UKF_Update(MeasurementPackage meas_package, MatrixXd Zsig, VectorXd z_pred, MatrixXd S);
 
 
   // initially set to false, set to true in first call of ProcessMeasurement
@@ -95,6 +103,9 @@ class UKF {
 
   // Sigma point spreading parameter
   double lambda_;
+
+  // radar dimension
+  int n_z_;
 };
 
 #endif  // UKF_H
