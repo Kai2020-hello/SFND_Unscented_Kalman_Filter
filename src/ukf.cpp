@@ -152,17 +152,18 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
     MatrixXd Zsig = MatrixXd(2, 2 * n_aug_ + 1);
     VectorXd z_pred = VectorXd(2);
     MatrixXd S = MatrixXd(2, 2);
-    // 计算预测测量值
+    // 计算预测测量的sigma节点
     for (int i = 0; i < 2*n_aug_+1 ; ++i) {
-        const double px = Xsig_pred_.col(i,0);
-        const double py = Xsig_pred_.col(i,1);
+        const double px = Xsig_pred_(i,0);
+        const double py = Xsig_pred_(i,1);
 
         Zsig(i,0) = px;
         Zsig(i,0) = py;
     }
+    //计算 预测值
     z_pred = Zsig * weights_;
 
-    // 预测协方差矩阵
+    // 计算预测测量值协方差矩阵
     S.fill(0.0);
     for (int i = 0; i < 2*n_aug_+1 ; ++i) {
         VectorXd diff = z_pred.col(i) - z_pred;
@@ -170,7 +171,7 @@ void UKF::UpdateLidar(MeasurementPackage meas_package) {
 
         S += weights_(i) * diff * diff.transpose();
     }
-
+    // 处理噪音
     S(0,0) += std_laspx_ * std_laspx_;
     S(1,1) += std_laspy_ * std_laspy_;
 
@@ -188,7 +189,7 @@ void UKF::UKF_Update(MeasurementPackage meas_package, MatrixXd Zsig, VectorXd z_
     VectorXd z = meas_package.raw_measurements_;
 
     // 计算交叉关系
-    MatrixXd T = MatrixXd(n_x,z.size());
+    MatrixXd T = MatrixXd(n_x_,z.size());
     T.fill(0.0);
     for (int i = 0; i < 2*n_aug_ + 1; ++i) {
         VectorXd x_diff = Xsig_pred_.col(i) - x_;
